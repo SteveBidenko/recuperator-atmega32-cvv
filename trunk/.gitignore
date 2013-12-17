@@ -1,0 +1,7 @@
+Exe
+Linker
+Obj
+List
+*.c_cbf
+*.h_cbf
+/sys$command
