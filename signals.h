@@ -12,6 +12,7 @@
 #define MEANDR 4
 // Описание структуры состояния всех сигналов
 struct st_signal {
+    unsigned char shift_out;     // Переменная содержащая подготовленные данные регистра сдвига
     unsigned char buz_mode;      // Режим работы звукового оповещения: 0 - нет звука, 1 - Короткий бип, 2 - Длинный бип, 3 - длинный меандр
     unsigned char buz_timer;
     unsigned char buz_status;
@@ -25,13 +26,19 @@ struct st_signal {
     unsigned char white_mode;
     unsigned char white_timer;
     unsigned char white_status;
+    // Режим работы охладителя
+    unsigned char coolant1_mode;
+    unsigned char coolant2_mode;
 };
 // Описание внешних функций
+void update_shift_register(void);               // Вызывается только из таймера. Необходим равномерно распределенный по времени вызов. 
 extern void update_signal_status(void);         // Вызывается только из таймера. Необходим равномерно распределенный по времени вызов.
 // extern void init_signal(void);                  // Инициализационная часть всех сигналов ???
 extern void signal_buz(unsigned char);
 extern void signal_green(unsigned char);
 extern void signal_red(unsigned char);
 extern void signal_white(unsigned char);
+extern void signal_coolant1(unsigned char);
+extern void signal_coolant2(unsigned char);
 extern void signal_printallbytes (void);
 #endif

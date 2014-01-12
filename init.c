@@ -78,10 +78,10 @@ interrupt [TIM1_OVF] void timer1_ovf_isr(void) {
         EncReady = 1;
         EncState = 0;
     };
-      if (count_signal == 0) {
+    if (count_signal == 0) {
         update_signal_status();
         count_signal = COUNT_SIGNAL_MAX; // установка счетчика.
-      } else count_signal--;
+    } else count_signal--;
     if (t_key) t_key--;
 }
 //Timer 2 overflow interrupt service routine

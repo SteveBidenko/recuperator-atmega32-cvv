@@ -2,13 +2,17 @@
 #include <stdio.h>
 #include "robowater.h"
 #include "signals.h"
-// Лапы сигналов
-#define BUZ PORTD.6     // Порт звука
-#define RED PORTA.3     // Порт красной лампочки
-#define GREEN PORTB.4   // Порт зеленой лампочки
-#define WHITE PORTA.2   // Порт белой лампочки
+#include "bits.h"
+#define COOLANT1 0 // Позиция Охладителя 1 в сдвиговом регистре  
+#define COOLANT2 1 // Позиция Охладителя 2 в сдвиговом регистре
+#define BUZ 2     // Позиция звука в сдвиговом регистре
+#define RED 3     // Позиция красной лампочки в сдвиговом регистре
+#define GREEN 6   // Позиция зеленой лампочки в сдвиговом регистре
+#define WHITE 7   // Позиция белой лампочки в сдвиговом регистре
 // Описание модульных переменных
 struct st_signal signals;      // Текущее состояние всех сигналов
+// Описание модульных функций
+void init_shift_register(unsigned char value, unsigned char position);
 // Функция выводящая состояние всей структуры сигналов
 void signal_printallbytes (void) {
     register unsigned char i;
@@ -125,10 +129,11 @@ void update_signal_status(void) {
             signals.buz_mode = OFF;
             break;
     }
-    if (mode.sound) BUZ = signals.buz_status;
-    RED = update_lamp_status(&signals.red_mode);
-    GREEN = update_lamp_status(&signals.green_mode);
-    WHITE = update_lamp_status(&signals.white_mode);
+    if (mode.sound) init_shift_register(signals.buz_status, BUZ);
+    init_shift_register(update_lamp_status(&signals.red_mode), RED);
+    init_shift_register(update_lamp_status(&signals.green_mode), GREEN);
+    init_shift_register(update_lamp_status(&signals.white_mode), WHITE);
+    update_shift_register();    // Обслуживание регистра сдвига для сигналов
     // signal_printallbytes();
 }
 // Функция смены режима звукового оповещения
@@ -152,20 +157,54 @@ void signal_buz(unsigned char signal_mode) {
             signals.buz_timer = OFF;
             break;
     };
-    if (mode.sound) BUZ = signals.buz_status;
+    if (mode.sound) {
+        init_shift_register(signals.buz_status, BUZ);
+        update_shift_register();    // Обслуживание регистра сдвига для сигналов
+    }
 }
 // Функция смены режима светового оповещения красной лампочки
 void signal_red(unsigned char signal_mode) {
     signals.red_mode = signal_mode;
-    RED = init_lamp_status(&signals.red_mode);
+    init_shift_register(init_lamp_status(&signals.red_mode), RED);
+    update_shift_register();    // Обслуживание регистра сдвига для сигналов
 }
 // Функция смены режима светового оповещения зеленой лампочки
 void signal_green(unsigned char signal_mode) {
     signals.green_mode = signal_mode;
-    GREEN = init_lamp_status(&signals.green_mode);
+    init_shift_register(init_lamp_status(&signals.green_mode), GREEN);
+    update_shift_register();    // Обслуживание регистра сдвига для сигналов
 }
 // Функция смены режима светового оповещения белой лампочки
 void signal_white(unsigned char signal_mode) {
     signals.white_mode = signal_mode;
-    WHITE = init_lamp_status(&signals.white_mode);
+    init_shift_register(init_lamp_status(&signals.white_mode), WHITE);
+    update_shift_register();    // Обслуживание регистра сдвига для сигналов
+}
+// Функция смены режима Охладителя 1
+void signal_coolant1(unsigned char signal_mode) {
+    signals.coolant1_mode = signal_mode;
+    init_shift_register(init_lamp_status(&signals.coolant1_mode), COOLANT1);
+    update_shift_register();    // Обслуживание регистра сдвига для сигналов
+}
+// Функция смены режима Охладителя 2
+void signal_coolant2(unsigned char signal_mode) {
+    signals.coolant2_mode = signal_mode;
+    init_shift_register(init_lamp_status(&signals.coolant2_mode), COOLANT2);
+    update_shift_register();    // Обслуживание регистра сдвига для сигналов
+}
+#define STROBE PORTB.4
+#define CLOCK PORTD.6
+#define DATA PORTA.3
+// Функция инициализации регистра сдвига
+void init_shift_register(unsigned char value, unsigned char position) {
+    (value) && SETBIT(signals.shift_out, position) || CLEARBIT(signals.shift_out, position);
+}
+// Функция обновления статуса
+void update_shift_register(void) {
+  unsigned char i; 
+  STROBE = 0; CLOCK = 0;
+  for (i = 0; i <= 7; i++) {
+    DATA = BITSET(signals.shift_out, i); CLOCK = 1; CLOCK = 0;
+  }
+  DATA = 0; STROBE = 1; STROBE = 0;
 }
