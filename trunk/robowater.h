@@ -52,7 +52,7 @@
 #define ds1820_devices prim_par.terms
 // Чтение температуры (аргумент - номер термометра начиная с 0)
 #define read_term(num) termometers[num].t
-#define TIM1_COUNT 52767 // 61845
+#define TIM1_COUNT 52767 
 #define INITMODE 8                // Для запуска системы из меню 
 #define T_TO 180                  // Время открытия - закрытия крана то
 #define INIT_MODE 1

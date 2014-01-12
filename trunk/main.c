@@ -18,8 +18,8 @@
 #include "season.h"
 #include "fan.h"
 // Локальные макроподстановки
-#define MAJOR_VERSION 5
-#define MINOR_VERSION 16
+#define MAJOR_VERSION 6
+#define MINOR_VERSION 0
 // #define NODEBUG
 // enum
 // Определение главных структур
@@ -135,7 +135,7 @@ unsigned char size_prim_par;        // Почти константа. Нужна для функций записи
 
 int time_cooling = 0;
 enum en_event event;                          // Текущее событие в системе
-#define HELP_LINES 14
+#define HELP_LINES 16
 typedef char help_str[70];
 flash help_str all_help_str[HELP_LINES] = {
 "z - общее состояние системы",                                          // [0]
@@ -151,7 +151,9 @@ flash help_str all_help_str[HELP_LINES] = {
 "m - печать текущих параметров системы",                                // [10]
 "n - печать состояния системы",                                         // [11]
 "0..3 - поиск адреса термометра из prim_par.addr в ds1820_rom_codes",   // [12]
-"9 - вывод всей структуры сигналов",                                    // [13]
+"4..5 - включение/выключение охладителя 1",                             // [13]
+"6..7 - включение/выключение охладителя 2",                             // [14]
+"9 - вывод всей структуры сигналов",                                    // [15]
 };
 // Описание функций
 void print_help();
@@ -742,6 +744,11 @@ void check_serial(void) {
                 i = ds1820_is_exist (prim_par.addr[3], ds1820_rom_codes[0]);
                 printf ("%s термометр найден в позиции %u\r\n", address_to_LCD(prim_par.addr[3]), i);
                 break;
+            // Может пригодиться для отладки охладителей
+            case 0x34: signal_coolant1(ON); break;  // символ '4'    
+            case 0x35: signal_coolant1(OFF); break; // символ '5'
+            case 0x36: signal_coolant2(ON); break;  // символ '6'
+            case 0x37: signal_coolant2(OFF); break; // символ '7'
             case 0x39:              // символ '9'
                 signal_printallbytes();
                 break;
