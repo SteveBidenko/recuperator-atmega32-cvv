@@ -19,7 +19,7 @@
 #include "fan.h"
 // Локальные макроподстановки
 #define MAJOR_VERSION 6
-#define MINOR_VERSION 0
+#define MINOR_VERSION 1
 // #define NODEBUG
 // enum
 // Определение главных структур
@@ -338,8 +338,7 @@ void event_processing(void) {
                     FAN_SPEED = check_fan_range(prim_par.fan_speed);
                     //count_fan = 0;
                     time_integration = 0;
-                    //time_cooling = TIME_COOLING_MAX;
-                    time_cooling = prim_par.T_z;
+                    time_cooling = prim_par.T_summer;
                     signal_buz(LONG);
                     break; // mo_stop
                 case mo_warming_up:
@@ -745,10 +744,10 @@ void check_serial(void) {
                 printf ("%s термометр найден в позиции %u\r\n", address_to_LCD(prim_par.addr[3]), i);
                 break;
             // Может пригодиться для отладки охладителей
-            case 0x34: signal_coolant1(ON); break;  // символ '4'    
-            case 0x35: signal_coolant1(OFF); break; // символ '5'
-            case 0x36: signal_coolant2(ON); break;  // символ '6'
-            case 0x37: signal_coolant2(OFF); break; // символ '7'
+            case 0x34: signal_cooling1(ON); break;  // символ '4'    
+            case 0x35: signal_cooling1(OFF); break; // символ '5'
+            case 0x36: signal_cooling2(ON); break;  // символ '6'
+            case 0x37: signal_cooling2(OFF); break; // символ '7'
             case 0x39:              // символ '9'
                 signal_printallbytes();
                 break;

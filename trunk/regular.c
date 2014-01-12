@@ -133,7 +133,7 @@ void regular_inspection(void) {
             if (prim_par.season) {
                 winter_regulator();
             } else {
-                coolant_regulator();
+                cooling_regulator();
             }
             // Без регулятора скорости лапа задействована для охладителя. Стоит заглушка.
             if (1 == 0) {

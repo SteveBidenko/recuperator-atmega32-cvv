@@ -3,8 +3,8 @@
 #include "robowater.h"
 #include "signals.h"
 #include "bits.h"
-#define COOLANT1 0 // Позиция Охладителя 1 в сдвиговом регистре  
-#define COOLANT2 1 // Позиция Охладителя 2 в сдвиговом регистре
+#define COOLING1 0 // Позиция Охладителя 1 в сдвиговом регистре  
+#define COOLING2 1 // Позиция Охладителя 2 в сдвиговом регистре
 #define BUZ 2     // Позиция звука в сдвиговом регистре
 #define RED 3     // Позиция красной лампочки в сдвиговом регистре
 #define GREEN 6   // Позиция зеленой лампочки в сдвиговом регистре
@@ -181,15 +181,15 @@ void signal_white(unsigned char signal_mode) {
     update_shift_register();    // Обслуживание регистра сдвига для сигналов
 }
 // Функция смены режима Охладителя 1
-void signal_coolant1(unsigned char signal_mode) {
-    signals.coolant1_mode = signal_mode;
-    init_shift_register(init_lamp_status(&signals.coolant1_mode), COOLANT1);
+void signal_cooling1(unsigned char signal_mode) {
+    mode.cooling1 = signals.cooling1_mode = signal_mode;
+    init_shift_register(init_lamp_status(&signals.cooling1_mode), COOLING1);
     update_shift_register();    // Обслуживание регистра сдвига для сигналов
 }
 // Функция смены режима Охладителя 2
-void signal_coolant2(unsigned char signal_mode) {
-    signals.coolant2_mode = signal_mode;
-    init_shift_register(init_lamp_status(&signals.coolant2_mode), COOLANT2);
+void signal_cooling2(unsigned char signal_mode) {
+    mode.cooling2 = signals.cooling2_mode = signal_mode;
+    init_shift_register(init_lamp_status(&signals.cooling2_mode), COOLING2);
     update_shift_register();    // Обслуживание регистра сдвига для сигналов
 }
 #define STROBE PORTB.4

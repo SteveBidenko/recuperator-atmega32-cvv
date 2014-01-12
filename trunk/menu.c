@@ -55,7 +55,7 @@ struct st_parameter settings[NUM_SETTINGS]={
     {3500, e_water, 1, 25},         // [1] температура воды СТОП TW_out_Stop
     {1000, e_water, 1, 26},         // [2] температура воды выход TW_out_Min
     {1500, e_room, 1, 27},          // [3] температура воздуха мин TA_out_Min
-    {30, e_stime, 1, 28},           // [4] время интегрирования лето T_z ?
+    {30, e_stime, 1, 28},           // [4] время интегрирования лето T_summer ?
     {10, e_stime, 1, 29},           // [5] время интегрирования зима T_int
     {1, e_coef, 1, 30},             // [6] Коэффициэнт усиления Ku
     {0, e_coef, 1, 54},             // [7] Коэффициэнт Ki
@@ -126,7 +126,7 @@ flash lcd_str all_menu_str[] = {
         "TW STOP ",    // [24] TW_out_Stop
         "TW Min ",     // [25] TW_out_Min
         "TA Min ",     // [26] TA_out_Min
-        "ВР.Лето=",    // [27] T_z
+        "ВР.Лето=",    // [27] T_summer
         "ВР.Зима=",    // [28] T_int
         "КУ=",         // [29] 
         "Дt Лето=",    // [30] t_summer_sensitivity;
@@ -169,7 +169,7 @@ void sync_set_par(byte sync) {
         settings[1].val_data = prim_par.TW_out_Stop;
         settings[2].val_data = prim_par.TW_out_Min;
         settings[3].val_data = prim_par.TA_out_Min;
-        settings[4].val_data = prim_par.T_z;
+        settings[4].val_data = prim_par.T_summer;
         settings[5].val_data = prim_par.T_int;
         settings[6].val_data = prim_par.Ku;
         settings[7].val_data = prim_par.Ki;
@@ -257,8 +257,8 @@ void sync_set_par(byte sync) {
             if (prim_par.TA_out_Min != settings[3].val_data) {
                 prim_par.TA_out_Min = settings[3].val_data; need_eeprom_write = 1;
             }
-            if (prim_par.T_z != settings[4].val_data) {
-                prim_par.T_z = settings[4].val_data; need_eeprom_write = 1;
+            if (prim_par.T_summer != settings[4].val_data) {
+                prim_par.T_summer = settings[4].val_data; need_eeprom_write = 1;
             }
             if (prim_par.T_int != settings[5].val_data) {
                 prim_par.T_int = settings[5].val_data; need_eeprom_write = 1;
