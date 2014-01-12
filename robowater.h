@@ -35,7 +35,6 @@
 #define TIME_BUZ1 1                  // Время Звука 1
 #define TIME_BUZ2 3                  // Время Звука 2
 #define STRLENGTH 16                // Длина строки параметра
-#define TIME_COOLING_MAX 15       //время задержки включения охладителя секунд
 #define COUNT_FAN_MAX 5          // Максимальное количество осчетов для изменения оборотов вентилятора
 #define POMP PORTD.5     // Порт.Пин насоса
 #define COUNT_SIGNAL_MAX 50 // Количество тиков таймера 1 (1мс) для формирования сигналов звука и светодиодов. 0,5 сек / 1мс = 500
@@ -115,7 +114,7 @@ extern struct st_eeprom_par {
     byte tap_angle, fan_speed, ADC1, ADC2;        // 0x7F, 205, 0x7F, 0x7F, [4]
     int dt_winter, dt_summer;  
     int Ku, Ki, Kd;                             // 10, 0, 0 [6]
-    int T_z, T_int;                             // Время интегртрования летом, Время интегрирования зимой
+    int T_summer, T_int;                             // Время интегрирования летом, Время интегрирования зимой
     byte T_start;                               // Время прогрева при старте системы. По умолчанию: 180 
     int TW_out_Min, TW_out_Stop;                // 1500, 5000,
     int TA_in_Min, TA_out_Min, TA_out_prs;    //-1500, 1000, 2200   [10]

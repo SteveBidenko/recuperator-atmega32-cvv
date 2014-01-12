@@ -13,39 +13,35 @@
 //unsigned int time_integration = 0;
 struct PID_DATA pidData;
 // Подпрограмма регулирования охладителя (не зимой)
-void coolant_regulator (void) {
+void cooling_regulator (void) {
     if (prim_par.season) return;   // защита от дурака-программиста
     // Для установок с водяным охладителем запускаем охладитель
     if (time_cooling == 0) {
         // if (POM_T > SET_T + prim_par.dt_summer) {
         if (UL_T > SET_T) {
             if (POM_T > SET_T) {
-                /* if ( mode.cooling1 == 0) {
-                      mode.cooling1 = 1;
+                if (mode.cooling1 == OFF) {
+                      signal_cooling1(ON);
                       signal_green(SHORT);
                 } else {
-                      mode.cooling2 = 1;
+                      signal_cooling2(ON);
                       signal_green(LONG);
-                } */
-                if (mode.print) printf("Включен охладитель.  POM_T :%d\r\n",   POM_T);
+                }
+                if (mode.print) printf("Включен охладитель. POM_T :%d\r\n", POM_T);
             }
         }
-        //Остановка охладителя
+        // Остановка охладителя
         if (POM_T < (SET_T - prim_par.dt_summer) || UL_T < SET_T) {
-            /* if (mode.cooling1 == 1) {
-                 mode.cooling1 = 0;
+            if (mode.cooling1 == ON) {
+                 signal_cooling1(OFF);
                  signal_green(SHORT);
             } else {
-                 mode.cooling2 = 0;
+                 signal_cooling2(OFF);
                  signal_green(ON);
-            } */
+            }
             if (mode.print) printf("Отключен охладитель. Разность температур - дельта: %d, POM_T :%d\r\n",  (SET_T - prim_par.dt_summer), POM_T);
         }
-        time_cooling = prim_par.T_z;
-        /* time_cooling = TIME_COOLING_MAX;
-        mode.cooling1 = 0;
-        mode.cooling2 = 0;
-        count_cooling = 0; */
+        time_cooling = prim_par.T_summer;
     }
 }
 // Подпрограмма поддержки работоспособности системы зимой в режиме останова
